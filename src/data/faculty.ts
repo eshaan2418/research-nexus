@@ -4,11 +4,11 @@
 
 export const SITE_CONFIG = {
   // Tagline shown above the diagram (uppercase, wide tracking)
-  tagline: "MANUFACTURING · TECHNOLOGY · ENTREPRENEURSHIP · INDUSTRY PARTNERSHIP",
+  tagline: "INTELLIGENT · COMPUTING · APPLIED · LEARNING",
   // Acronym shown in the black center hub
-  acronym: "MTEC",
+  acronym: "IC@L",
   // Full program name (used for SEO)
-  programName: "Manufacturing, Technology & Entrepreneurship Collaborative",
+  programName: "IC@L — Intelligent Computing & Applied Learning",
 };
 
 export type AreaId = "ra1" | "ra2" | "ra3" | "ra4";
@@ -21,32 +21,24 @@ export interface ResearchArea {
   decorative?: boolean;
 }
 
-// Order matches the reference image, starting top-right and going clockwise:
-// top-right: Additive Manufacturing... | bottom-right: Advanced Materials...
-// bottom-left: Sustainable Energy...   | top-left: Entrepreneurship (decorative)
+// Slice order, clockwise from top-right:
+// ra1 top-right, ra2 bottom-right, ra3 bottom-left, ra4 top-left (decorative)
 export const RESEARCH_AREAS: ResearchArea[] = [
   {
     id: "ra1",
-    label: ["Additive", "Manufacturing,", "Mechatronics,", "Aerospace &", "Machine Learning"],
+    label: ["AI, Machine Learning", "& Computer Vision"],
   },
   {
     id: "ra2",
-    label: [
-      "Advanced",
-      "Materials,",
-      "Biomaterials,",
-      "Development,",
-      "Modelling &",
-      "Characterisation",
-    ],
+    label: ["Software Engineering", "& Generative AI"],
   },
   {
     id: "ra3",
-    label: ["Sustainable Energy", "& Environmental", "Technologies"],
+    label: ["Cloud, Systems", "& Distributed Computing"],
   },
   {
     id: "ra4",
-    label: ["Entrepreneurship"],
+    label: ["Health, Robotics", "& Applied AI"],
     decorative: true,
   },
 ];
@@ -60,42 +52,33 @@ export interface Faculty {
   profileImage: string;
 }
 
-// Demo faculty — replace with real entries.
 const ph = (seed: string) =>
   `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}&backgroundColor=D6CFCA&fontFamily=IBM%20Plex%20Sans`;
 
+// IC@L members from the member slides deck.
 export const FACULTY: Faculty[] = [
-  { id: "1", name: "Andrew Maxwell", areas: { ra4: 1 }, profileImage: ph("Andrew Maxwell") },
-  { id: "2", name: "Alex Czekanski", areas: { ra1: 1 }, profileImage: ph("Alex Czekanski") },
-  { id: "3", name: "George Zhu", areas: { ra1: 1 }, profileImage: ph("George Zhu") },
+  { id: "1", name: "Marcus Brubaker", areas: { ra1: 1 }, profileImage: ph("Marcus Brubaker") },
+  { id: "2", name: "Alvine B. Belle", areas: { ra2: 1 }, profileImage: ph("Alvine Belle") },
+  { id: "3", name: "Ruth Urner", areas: { ra1: 1 }, profileImage: ph("Ruth Urner") },
+  { id: "4", name: "Andrew Eckford", areas: { ra3: 1 }, profileImage: ph("Andrew Eckford") },
+  { id: "5", name: "Song Wang", areas: { ra2: 1 }, profileImage: ph("Song Wang") },
+  { id: "6", name: "Peter Lian", areas: { ra3: 1 }, profileImage: ph("Peter Lian") },
+  { id: "7", name: "Maleknaz Nayebi", areas: { ra2: 1 }, profileImage: ph("Maleknaz Nayebi") },
+  { id: "8", name: "Ali Sadeghi-Naini", areas: { ra4: 1 }, profileImage: ph("Ali Sadeghi-Naini") },
+  { id: "9", name: "Eric Ruppert", areas: { ra3: 1 }, profileImage: ph("Eric Ruppert") },
+  { id: "10", name: "Hadi Hemmati", areas: { ra2: 1 }, profileImage: ph("Hadi Hemmati") },
+  { id: "11", name: "Hamzeh Khazaei", areas: { ra3: 1 }, profileImage: ph("Hamzeh Khazaei") },
+  { id: "12", name: "Jarek Szlichta", areas: { ra1: 1 }, profileImage: ph("Jarek Szlichta") },
+  { id: "13", name: "Jeff Edmonds", areas: { ra1: 1 }, profileImage: ph("Jeff Edmonds") },
+  { id: "14", name: "John K. Tsotsos", areas: { ra4: 1 }, profileImage: ph("John Tsotsos") },
   {
-    id: "4",
-    name: "Solomon Boakye-Yiadom",
-    areas: { ra2: 1 },
-    profileImage: ph("Solomon Boakye-Yiadom"),
+    id: "15",
+    name: "Laleh Seyyed-Kalantari",
+    areas: { ra1: 1 },
+    profileImage: ph("Laleh Seyyed-Kalantari"),
   },
-  { id: "5", name: "Ronald Hanson", areas: { ra1: 1 }, profileImage: ph("Ronald Hanson") },
-  { id: "6", name: "Garrett Melenka", areas: { ra2: 1 }, profileImage: ph("Garrett Melenka") },
-  {
-    id: "7",
-    name: "Marina Freire-Gormaly",
-    areas: { ra3: 1 },
-    profileImage: ph("Marina Freire-Gormaly"),
-  },
-  { id: "8", name: "Cuiying Jian", areas: { ra2: 1 }, profileImage: ph("Cuiying Jian") },
-  { id: "9", name: "Pouya Rezai", areas: { ra2: 1 }, profileImage: ph("Pouya Rezai") },
-  { id: "10", name: "Reza Rizvi", areas: { ra2: 1 }, profileImage: ph("Reza Rizvi") },
-  { id: "11", name: "Nima Tabatabaei", areas: { ra2: 1 }, profileImage: ph("Nima Tabatabaei") },
-  { id: "12", name: "Satinder K. Brar", areas: { ra3: 1 }, profileImage: ph("Satinder K. Brar") },
-  { id: "13", name: "Simone Pisana", areas: { ra2: 1 }, profileImage: ph("Simone Pisana") },
-  { id: "14", name: "Ryan Orszulik", areas: { ra1: 1 }, profileImage: ph("Ryan Orszulik") },
-  { id: "15", name: "Stephanie Gora", areas: { ra3: 1 }, profileImage: ph("Stephanie Gora") },
-  {
-    id: "16",
-    name: "Christopher Caputo",
-    areas: { ra2: 1 },
-    profileImage: ph("Christopher Caputo"),
-  },
-  { id: "17", name: "Paul O'Brien", areas: { ra1: 1 }, profileImage: ph("Paul O'Brien") },
-  { id: "18", name: "Terry Sachlos", areas: { ra2: 1 }, profileImage: ph("Terry Sachlos") },
+  { id: "16", name: "Marin Litoiu", areas: { ra2: 1 }, profileImage: ph("Marin Litoiu") },
+  { id: "17", name: "Marios Fokaefs", areas: { ra2: 1 }, profileImage: ph("Marios Fokaefs") },
+  { id: "18", name: "Michael Jenkin", areas: { ra4: 1 }, profileImage: ph("Michael Jenkin") },
+  { id: "19", name: "Neda Salahandish", areas: { ra4: 1 }, profileImage: ph("Neda Salahandish") },
 ];
