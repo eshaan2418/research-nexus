@@ -7,85 +7,120 @@ interface EcosystemPieProps {
   onReset: () => void;
 }
 
-// SVG geometry constants
-const SIZE = 520;
+// SVG geometry — matches reference: cream pie inside a thick red ring,
+// black 1-2px dividers, black hub with white acronym.
+const SIZE = 600;
 const CENTER = SIZE / 2;
-const OUTER_RADIUS = 220;
-const HUB_RADIUS = 70;
+const RING_OUTER = 290; // outer red ring
+const RING_INNER = 250; // inner edge of red ring = pie outer
+const HUB_RADIUS = 78;
 
 function polar(cx: number, cy: number, r: number, angleDeg: number) {
   const a = ((angleDeg - 90) * Math.PI) / 180;
   return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
 }
 
-function arcPath(startAngle: number, endAngle: number) {
-  const start = polar(CENTER, CENTER, OUTER_RADIUS, endAngle);
-  const end = polar(CENTER, CENTER, OUTER_RADIUS, startAngle);
+function arcPath(startAngle: number, endAngle: number, radius: number) {
+  const start = polar(CENTER, CENTER, radius, endAngle);
+  const end = polar(CENTER, CENTER, radius, startAngle);
   const largeArc = endAngle - startAngle <= 180 ? 0 : 1;
   return [
     `M ${CENTER} ${CENTER}`,
     `L ${start.x} ${start.y}`,
-    `A ${OUTER_RADIUS} ${OUTER_RADIUS} 0 ${largeArc} 0 ${end.x} ${end.y}`,
+    `A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y}`,
     "Z",
   ].join(" ");
 }
 
 export function EcosystemPie({ selected, onSelect, onReset }: EcosystemPieProps) {
-  // 4 equal slices starting at top (angle 0 = 12 o'clock)
+  // Slice angles laid out clockwise starting at top:
+  // ra1 = top-right (0–90), ra2 = bottom-right (90–180),
+  // ra3 = bottom-left (180–270), ra4 = top-left (270–360, decorative)
   const slices = useMemo(
     () =>
       RESEARCH_AREAS.map((area, i) => {
         const startAngle = i * 90;
         const endAngle = startAngle + 90;
         const midAngle = startAngle + 45;
-        // Label radius — between hub and outer edge
-        const labelPos = polar(CENTER, CENTER, (HUB_RADIUS + OUTER_RADIUS) / 2 + 10, midAngle);
-        return { area, startAngle, endAngle, midAngle, labelPos, path: arcPath(startAngle, endAngle) };
+        // Place label roughly midway between hub and pie edge
+        const labelRadius = (HUB_RADIUS + RING_INNER) / 2 + 5;
+        const labelPos = polar(CENTER, CENTER, labelRadius, midAngle);
+        return {
+          area,
+          midAngle,
+          labelPos,
+          path: arcPath(startAngle, endAngle, RING_INNER),
+        };
       }),
     [],
   );
 
   return (
-    <div className="relative w-full max-w-[520px] aspect-square mx-auto">
+    <div className="relative mx-auto aspect-square w-full max-w-[600px]">
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
-        className="w-full h-full overflow-visible"
+        className="h-full w-full overflow-visible"
         role="group"
         aria-label="Research areas — click a slice to filter faculty"
       >
-        {slices.map(({ area, path, labelPos, midAngle }) => {
+        {/* Red outer ring */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={RING_OUTER}
+          fill="var(--ecosystem-ring)"
+        />
+        {/* Cream pie disc with black border */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={RING_INNER}
+          fill="var(--ecosystem-slice)"
+          stroke="var(--ecosystem-ink)"
+          strokeWidth={2}
+        />
+
+        {/* Slices (over the cream disc, with black dividers) */}
+        {slices.map(({ area, path, labelPos }) => {
           const isSelected = selected === area.id;
           const isDecorative = !!area.decorative;
           const isInteractive = !isDecorative;
+          const dimmed = selected !== null && !isSelected && !isDecorative;
 
           return (
-            <g
-              key={area.id}
-              className={`origin-center transition-transform duration-300 ${
-                isSelected ? "scale-[1.03]" : ""
-              } ${isInteractive ? "cursor-pointer hover:scale-[1.015]" : "cursor-default"}`}
-              style={{ transformOrigin: `${CENTER}px ${CENTER}px` }}
-              onClick={() => isInteractive && onSelect(area.id)}
-              onKeyDown={(e) => {
-                if (!isInteractive) return;
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSelect(area.id);
-                }
-              }}
-              tabIndex={isInteractive ? 0 : -1}
-              role={isInteractive ? "button" : "presentation"}
-              aria-label={isInteractive ? `Filter by ${area.label}` : undefined}
-              aria-pressed={isInteractive ? isSelected : undefined}
-            >
+            <g key={area.id}>
               <path
                 d={path}
-                fill={area.colorVar}
+                fill="var(--ecosystem-slice)"
                 stroke="var(--ecosystem-ink)"
-                strokeWidth={isSelected ? 3 : 1}
-                className="transition-[stroke-width] duration-200 focus:outline-none"
-                opacity={isDecorative ? 0.85 : 1}
+                strokeWidth={1.5}
+                className={`transition-opacity duration-300 ${
+                  isInteractive ? "cursor-pointer" : "cursor-default"
+                }`}
+                style={{ opacity: dimmed ? 0.55 : 1 }}
+                onClick={() => isInteractive && onSelect(area.id)}
+                onKeyDown={(e) => {
+                  if (!isInteractive) return;
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onSelect(area.id);
+                  }
+                }}
+                tabIndex={isInteractive ? 0 : -1}
+                role={isInteractive ? "button" : "presentation"}
+                aria-label={isInteractive ? `Filter by ${area.label.join(" ")}` : undefined}
+                aria-pressed={isInteractive ? isSelected : undefined}
               />
+              {/* Selected outline accent */}
+              {isSelected && (
+                <path
+                  d={path}
+                  fill="none"
+                  stroke="var(--ecosystem-ring)"
+                  strokeWidth={3}
+                  pointerEvents="none"
+                />
+              )}
               {/* Label */}
               <text
                 x={labelPos.x}
@@ -96,21 +131,27 @@ export function EcosystemPie({ selected, onSelect, onReset }: EcosystemPieProps)
                 fill="var(--ecosystem-ink)"
                 style={{
                   fontFamily: "IBM Plex Sans, sans-serif",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  letterSpacing: "0.02em",
+                  fontSize: 16,
+                  fontWeight: 700,
                 }}
-                transform={`rotate(${midAngle > 90 && midAngle < 270 ? midAngle - 180 : midAngle}, ${labelPos.x}, ${labelPos.y})`}
               >
-                {area.label}
+                {area.label.map((line, i) => (
+                  <tspan
+                    key={i}
+                    x={labelPos.x}
+                    dy={i === 0 ? `-${(area.label.length - 1) * 0.6}em` : "1.2em"}
+                  >
+                    {line}
+                  </tspan>
+                ))}
               </text>
             </g>
           );
         })}
 
-        {/* Center hub — red, clickable to reset */}
+        {/* Black center hub with white acronym — clickable to reset */}
         <g
-          className="cursor-pointer origin-center transition-transform duration-200 hover:scale-105"
+          className="origin-center cursor-pointer transition-transform duration-200 hover:scale-105"
           style={{ transformOrigin: `${CENTER}px ${CENTER}px` }}
           onClick={onReset}
           onKeyDown={(e) => {
@@ -140,9 +181,9 @@ export function EcosystemPie({ selected, onSelect, onReset }: EcosystemPieProps)
             className="pointer-events-none select-none"
             style={{
               fontFamily: "IBM Plex Sans, sans-serif",
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: 700,
-              letterSpacing: "0.05em",
+              letterSpacing: "0.06em",
             }}
           >
             {SITE_CONFIG.acronym}

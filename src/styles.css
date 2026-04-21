@@ -62,18 +62,16 @@
   --color-ecosystem-bubble-border: var(--ecosystem-bubble-border);
   --color-ecosystem-hub: var(--ecosystem-hub);
   --color-ecosystem-hub-foreground: var(--ecosystem-hub-foreground);
-  --color-area-1: var(--area-1);
-  --color-area-2: var(--area-2);
-  --color-area-3: var(--area-3);
-  --color-area-4: var(--area-4);
+  --color-ecosystem-ring: var(--ecosystem-ring);
+  --color-ecosystem-slice: var(--ecosystem-slice);
 }
 
 :root {
   --radius: 0.625rem;
 
-  /* Cream background, deep ink text */
-  --background: oklch(0.97 0.012 85);
-  --foreground: oklch(0.22 0.02 60);
+  /* White background, near-black ink (matches reference) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.16 0.005 60);
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.02 60);
@@ -110,19 +108,15 @@
   --sidebar-border: oklch(0.88 0.015 75);
   --sidebar-ring: oklch(0.55 0.12 30);
 
-  /* Ecosystem-specific */
-  --ecosystem-cream: oklch(0.97 0.012 85);
-  --ecosystem-ink: oklch(0.22 0.02 60);
+  /* Ecosystem-specific — matches reference: white bg, red ring, cream slices, black hub */
+  --ecosystem-cream: oklch(0.86 0.012 60);
+  --ecosystem-ink: oklch(0.16 0.005 60);
   --ecosystem-bubble: oklch(0.86 0.012 60); /* approx #D6CFCA */
-  --ecosystem-bubble-border: oklch(0.3 0.015 60);
-  --ecosystem-hub: oklch(0.55 0.22 27); /* signature red */
-  --ecosystem-hub-foreground: oklch(0.98 0.005 80);
-
-  /* Pie slice colors — muted earthy */
-  --area-1: oklch(0.62 0.1 45);   /* warm clay */
-  --area-2: oklch(0.65 0.07 145); /* sage */
-  --area-3: oklch(0.72 0.13 80);  /* ochre */
-  --area-4: oklch(0.6 0.07 200);  /* dusty teal (decorative) */
+  --ecosystem-bubble-border: oklch(0.16 0.005 60);
+  --ecosystem-hub: oklch(0.16 0.005 60); /* black hub */
+  --ecosystem-hub-foreground: oklch(0.99 0 0); /* white text */
+  --ecosystem-ring: oklch(0.58 0.19 27); /* signature red ring */
+  --ecosystem-slice: oklch(0.86 0.012 60); /* same cream as bubbles */
 }
 
 .dark {
